@@ -15,7 +15,7 @@ const Sidebar = () => {
   const [activeId, setActiveId] = useState(1);
 
   return (
-    <div className="w-60 h-screen p-4 bg-white shadow-md">
+    <div className="w-60 max-h-screen p-4 bg-white shadow-md">
       <div className="w-full h-12 mb-4 flex items-center overflow-hidden">
         <img src={logo} alt="Logo" className="h-full object-contain" />
       </div>

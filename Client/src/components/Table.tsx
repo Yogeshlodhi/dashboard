@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/table"
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import maths from '@/assets/maths.png';
+import science from '@/assets/science.png';
 
 import {
   Select,
@@ -17,52 +19,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-]
+import { useEffect } from "react";
+
+import { useStudentStore } from '@/store/useStudentStore';
+import { Student } from "@/types/type";
+
 
 export function DataTable() {
+  const { students, fetchStudentsData } = useStudentStore();
+
+  useEffect(() => {
+    fetchStudentsData();
+  }, [students]);
+
   return (
     <div className="bg-white p-4 rounded-lg">
       <div className="flex mb-8 items-center justify-between">
@@ -72,9 +41,8 @@ export function DataTable() {
               <SelectValue placeholder="AY 2024-25" />
             </SelectTrigger>
             <SelectContent className="bg-[#E9EDF1]">
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
+              <SelectItem value="light">AY 2022-23</SelectItem>
+              <SelectItem value="dark">AY 2023-24</SelectItem>
             </SelectContent>
           </Select>
           <Select>
@@ -82,39 +50,55 @@ export function DataTable() {
               <SelectValue placeholder="CBSE 9" />
             </SelectTrigger>
             <SelectContent className="bg-[#E9EDF1]">
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
+              <SelectItem value="light">CBSE 10</SelectItem>
+              <SelectItem value="system">CBSE 11</SelectItem>
+              <SelectItem value="dark">CBSE 12</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <Button className='text-[#3F526E] font-bold'>
-          <Plus color="#3F526E" fontWeight={800}/>
+          <Plus color="#3F526E" fontWeight={800} />
           Add new Student
         </Button>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Student Name</TableHead>
-            <TableHead>Cohort</TableHead>
-            <TableHead>Courses</TableHead>
-            <TableHead>Date Joined</TableHead>
-            <TableHead>Last Login</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.totalAmount}</TableCell>
+
+      <div className="overflow-auto h-[40rem]">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Student Name</TableHead>
+              <TableHead>Cohort</TableHead>
+              <TableHead>Courses</TableHead>
+              <TableHead>Date Joined</TableHead>
+              <TableHead>Last Login</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {students.map((student: Student) => (
+              <TableRow key={student.id}>
+                <TableCell>{student.name}</TableCell>
+                <TableCell>{student.cohort}</TableCell>
+                <TableCell className="flex gap-4 w-[25rem]">
+                  {student.courses.map((co, index) => (
+                    <div key={index} className="flex items-center justify-start bg-[#F6F8FA] p-0.5 rounded-md w-[10rem]">
+                      <div className="w-6 h-6 rounded-md cursor-pointer flex items-center overflow-hidden">
+                        <img src={index%2 != 0 ? maths : science} className="h-full object-contain" alt="subject"/>
+                      </div>
+                      <h1 className="ml-2">{co}</h1>
+                    </div>
+                  ))}
+                </TableCell>
+                <TableCell>{new Date(student.date_joined).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</TableCell>
+                <TableCell>{new Date(student.last_login).toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</TableCell>
+                <TableCell>
+                  <div className={`w-[15px] h-[15px] rounded-full ${student.status ? "bg-green-500" : "bg-red-500"}`} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

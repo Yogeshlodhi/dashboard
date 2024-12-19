@@ -1,13 +1,6 @@
+import { Student } from '@/types/type';
 import { create } from 'zustand';
 
-type Student = {
-  name: string;
-  cohort: string;
-  courses: string[];
-  dateJoined: string;
-  lastLogin: string;
-  status: boolean;
-};
 
 interface StudentState {
   students: Student[];
