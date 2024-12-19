@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import { fetchStudents } from '@/services/studentService'; // Adjust the path based on your project structure
+import { fetchStudents } from '@/services/studentService';
 import { Student } from '@/types/type';
 
 

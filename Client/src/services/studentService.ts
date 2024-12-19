@@ -7,6 +7,7 @@ export const fetchStudents = async () => {
   return response.data;
 };
 
+// additional function
 export const addStudent = async (studentData: any) => {
   const response = await axios.post(`${API_BASE_URL}/students`, studentData);
   return response.data;

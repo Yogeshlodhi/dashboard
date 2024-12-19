@@ -10,7 +10,6 @@ function App() {
       <Sidebar />
       <div className="flex-1 bg-gray-100">
         <Header />
-        {/* <div className="px-8 py-4 overflow-auto max-h-[calc(100vh-8rem)]"> */}
         <div className="px-8 py-4 overflow-hidden max-h-[42rem]">
           <DataTable />
         </div>
