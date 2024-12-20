@@ -1,36 +1,18 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { useEffect } from 'react';
+import { useStudentStore } from '@/store/useStudentStore';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Button } from './ui/button';
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import maths from '@/assets/maths.png';
 import science from '@/assets/science.png';
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { useEffect } from "react";
-
-import { useStudentStore } from '@/store/useStudentStore';
-import { Student } from "@/types/type";
-
-
+import { Student } from '@/types/type';
 export function DataTable() {
-  const { students, fetchStudentsData } = useStudentStore();
+  const { students, loading, fetchStudentsData } = useStudentStore();
 
   useEffect(() => {
     fetchStudentsData();
-  }, [students]);
+  }, [fetchStudentsData]);
 
   return (
     <div className="bg-white p-4 rounded-lg">
@@ -61,25 +43,29 @@ export function DataTable() {
           Add new Student
         </Button>
       </div>
-
-      <div className="overflow-auto h-[40rem]">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Student Name</TableHead>
-              <TableHead>Cohort</TableHead>
-              <TableHead>Courses</TableHead>
-              <TableHead>Date Joined</TableHead>
-              <TableHead>Last Login</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {students.map((student: Student) => (
-              <TableRow key={student.id}>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>{student.cohort}</TableCell>
-                <TableCell className="flex gap-4 w-[25rem]">
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <h1>Loading...</h1>
+        </div>
+      ) : (
+        <div className="overflow-auto h-[40rem]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Student Name</TableHead>
+                <TableHead>Cohort</TableHead>
+                <TableHead>Courses</TableHead>
+                <TableHead>Date Joined</TableHead>
+                <TableHead>Last Login</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {students.map((student: Student) => (
+                <TableRow key={student.id}>
+                  <TableCell>{student.name}</TableCell>
+                  <TableCell>{student.cohort}</TableCell>
+                  <TableCell className="flex gap-4 w-[25rem]">
                   {student.courses.map((co, index) => (
                     <div key={index} className="flex items-center justify-start bg-[#F6F8FA] p-0.5 rounded-md w-[10rem]">
                       <div className="w-6 h-6 rounded-md cursor-pointer flex items-center overflow-hidden">
@@ -94,11 +80,12 @@ export function DataTable() {
                 <TableCell>
                   <div className={`w-[15px] h-[15px] rounded-full ${student.status ? "bg-green-500" : "bg-red-500"}`} />
                 </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
-  )
+  );
 }
